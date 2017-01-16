@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+
+<html>
+<body>
+    <md-dialog id="instrDialog">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <span class="md-title">Select Difficulty</span>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="closeInstructionDialog()" aria-label="Close">X</md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <center>
+                    <md-input-container ng-hide="{{cpu_thinking}}">
+                        <label>Difficulty</label>
+                        <md-select ng-model="search_depth">
+                            <md-option ng-repeat="diff in difficulties" ng-value="difficulty_mappings[diff]">
+                                {{diff}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                </center>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions>
+            <md-button ng-click="closeDialog()" class="md-primary">OK</md-button>
+        </md-dialog-actions>
+    </md-dialog>
+</body>
+</html>
