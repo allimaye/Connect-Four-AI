@@ -32,8 +32,9 @@
                                         <!--<span style="width:3px"></span>-->
                                         <md-button ng-click="addPiece($index)" class="md-fab md-raised" ng-disabled="cpu_thinking"
                                                    aria-label="Insert into this column" id="{{$index}}" 
-                                                   ng-style="{'margin-left':{{pageWidth*0.0025}}+'px', 'margin-right':{{pageWidth*0.0025}}+'px'}">
-                                            <md-icon md-svg-src='/static/images/down-arrow.svg' height="{{pageHeight*0.08}}px"></md-icon>
+                                                   ng-style="buttonStyle">
+                                            <md-icon md-svg-src='/static/images/down-arrow.svg' 
+                                                     ng-style="iconStyle">></md-icon>
                                         </md-button>
                                         <!--<span style="width:3px"></span>-->
                                     </div>

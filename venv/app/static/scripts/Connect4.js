@@ -10,6 +10,18 @@
 
         $scope.pageHeight = window.innerHeight;
         $scope.pageWidth = window.innerWidth;
+        
+        $scope.buttonStyle = {
+            'margin-left': $scope.pageWidth*0.004+'px', 
+            'margin-right': $scope.pageWidth*0.004+'px',
+            'width': $scope.pageHeight*0.085+'px', 
+            'height': $scope.pageHeight * 0.085 + 'px',
+            'line-height': '0px'
+        };
+        $scope.iconStyle = {
+            'width': $scope.pageHeight * 0.0425 + 'px',
+            'height': $scope.pageHeight * 0.0425 + 'px'
+        };
 
         $scope.card_width = $("#card").width();
         $scope.content_padding = parseInt($("#content").css("padding-right")) + parseInt($("#content").css("padding-left"));
