@@ -29,19 +29,20 @@
                             <div layout="row">
                                 <div flex ng-repeat="col in board[0] track by $index">
                                     <div layout="row">
-                                        <span style="width:3px"></span>
+                                        <!--<span style="width:3px"></span>-->
                                         <md-button ng-click="addPiece($index)" class="md-fab md-raised" ng-disabled="cpu_thinking"
-                                                   aria-label="Insert into this column" id="{{$index}}">
-                                            <md-icon md-svg-src='/static/images/down-arrow.svg' height="{{pageHeight*0.095}}px"></md-icon>
+                                                   aria-label="Insert into this column" id="{{$index}}" 
+                                                   ng-style="{'margin-left':{{pageWidth*0.0025}}+'px', 'margin-right':{{pageWidth*0.0025}}+'px'}">
+                                            <md-icon md-svg-src='/static/images/down-arrow.svg' height="{{pageHeight*0.08}}px"></md-icon>
                                         </md-button>
-                                        <span style="width:3px"></span>
+                                        <!--<span style="width:3px"></span>-->
                                     </div>
                                 </div>
                             </div>
 
                             <div layout="row" ng-repeat="row in board">
-                                <div ng-repeat="col in row track by $index" id="boardrow{{$index}}">
-                                    <img ng-src="/static/images/img{{board[$parent.$index][$index]}}.jpg"
+                                <div ng-repeat="col in row track by $index">
+                                    <img ng-src="/static/images/img{{board[$parent.$index][$index]}}.jpg" id="board{{$parent.$index}}{{$index}}"
                                          class="md-card-image" height="{{pageHeight*0.095}}px">
                                 </div>
                             </div>
