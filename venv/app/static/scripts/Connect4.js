@@ -9,33 +9,6 @@
     app.controller('InputController', function ($scope, $mdDialog, $interval, $filter, $http,
         $timeout, $sanitize, $interval, $window) {
 
-        
-
-
-
-        //$scope.pageHeight = $window.innerHeight;
-        //$scope.pageWidth = $window.innerWidth;
-        
-        //$scope.buttonStyle = {
-        //    'margin-left': $scope.pageWidth*0.004+'px', 
-        //    'margin-right': $scope.pageWidth*0.004+'px',
-        //    'width': $scope.pageHeight*0.085+'px', 
-        //    'height': $scope.pageHeight * 0.085 + 'px',
-        //    'line-height': '0px',
-        //    'min-height': '0px'
-        //};
-        //$scope.iconStyle = {
-        //    'width': $scope.pageHeight * 0.0425 + 'px !important',
-        //    'height': $scope.pageHeight * 0.0425 + 'px !important'
-        //};
-        //$scope.slotStyle = {
-        //    'width': $scope.pageHeight * 0.095 + 'px',
-        //    'height': $scope.pageHeight * 0.095 + 'px',
-        //    'border-radius': '0 0 0 0'
-        //};
-        //$scope.titleStyle = {
-        //    'height': $scope.pageHeight * 0.07 + 'px',
-        //};
 
         $scope.buttonStyle = {
             'margin-left': '0px', 
