@@ -10,67 +10,7 @@
     font-family: "SevenSegment", sans-serif 
 }
 
-
-.center-submit
-{
-    margin-top: 20px;
-}
-
-.inputError
-{
-    background-color: #ff9999;
-    color: #ff1a1a;
-}
-
-.boldWord
-{
-    font-weight: bold;
-}
-
-.textInputNormal
-{
-     background-color: #ffffff; 
-     color: #000000;
-}
-
-.textInputError
-{
-     background-color: #ff9999; 
-     color: #ff1a1a;
-}
-
-.stretch-height
-{
-    height: 100%;
-}
-
-
-.space-stats
-{
-    margin: 5%;
-}
-
-.red-border
-{
-    border: 2px solid red;
-}
-
-.highlight-background
-{
-    background-color:yellow;
-}
-
-/*.parent {
-    display: block;
-}
-
-.card img {
-    width: 100%;
-    height: 100%;
-    display: inline-block;
-}*/
-
-html, 
-body {
-    height: 100%;
+.md-icon {
+    height: unset;
+    width: unset;
 }

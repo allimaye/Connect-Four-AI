@@ -7,7 +7,7 @@
         <title>Connect Four</title>
 
         <!-- Connect Four references -->
-        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
+        <link href="/static/css/angular-material.min.css" rel="stylesheet" >
         <link href="/static/css/index.css" rel="stylesheet" />
         <link href="/favicon.ico" type="image/x-icon" rel="icon" />
 
@@ -15,8 +15,8 @@
     <body style="background-color:#d1d1e0;" ng-controller="InputController as inputCtrl">
         <div>
             <md-content layout-padding>
-                <div style="height:{{pageHeight*0.08}}px;">
-                    <center><span class="header-font md-display-3">Connect Four</span></center>
+                <div>
+                    <center><span class="header-font md-display-2">Connect Four</span></center>
                 </div>
 
                 <md-card id="card">
@@ -24,19 +24,16 @@
 
                         <div layout="column" layout-align="center center">
 
-                            <span class="md-headline" ng-show="true" id="status" ng-bind-html="user_msg"></span>
+                            <span class="md-title" ng-show="true" id="status" ng-bind-html="user_msg"></span>
 
                             <div layout="row">
                                 <div flex ng-repeat="col in board[0] track by $index">
                                     <div layout="row">
-                                        <!--<span style="width:3px"></span>-->
                                         <md-button ng-click="addPiece($index)" class="md-fab md-raised" ng-disabled="cpu_thinking"
                                                    aria-label="Insert into this column" id="{{$index}}" 
                                                    ng-style="buttonStyle">
-                                            <md-icon md-svg-src='/static/images/down-arrow.svg' 
-                                                     ng-style="iconStyle">></md-icon>
+                                            <md-icon md-svg-src='/static/images/down-arrow.svg' ng-style="iconStyle"></md-icon>
                                         </md-button>
-                                        <!--<span style="width:3px"></span>-->
                                     </div>
                                 </div>
                             </div>
@@ -44,7 +41,7 @@
                             <div layout="row" ng-repeat="row in board">
                                 <div ng-repeat="col in row track by $index">
                                     <img ng-src="/static/images/img{{board[$parent.$index][$index]}}.jpg" id="board{{$parent.$index}}{{$index}}"
-                                         class="md-card-image" height="{{pageHeight*0.095}}px">
+                                         class="md-card-image md-icon" ng-style="slotStyle" >
                                 </div>
                             </div>
                         </div>

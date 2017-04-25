@@ -4,28 +4,126 @@
 
     var app = angular.module('Connect Four', ['ngMaterial', 'ngMessages', 'ngSanitize']);
 
+
+
     app.controller('InputController', function ($scope, $mdDialog, $interval, $filter, $http,
-        $timeout, $sanitize, $interval) {
+        $timeout, $sanitize, $interval, $window) {
+
         
 
-        $scope.pageHeight = window.innerHeight;
-        $scope.pageWidth = window.innerWidth;
+
+
+        //$scope.pageHeight = $window.innerHeight;
+        //$scope.pageWidth = $window.innerWidth;
         
+        //$scope.buttonStyle = {
+        //    'margin-left': $scope.pageWidth*0.004+'px', 
+        //    'margin-right': $scope.pageWidth*0.004+'px',
+        //    'width': $scope.pageHeight*0.085+'px', 
+        //    'height': $scope.pageHeight * 0.085 + 'px',
+        //    'line-height': '0px',
+        //    'min-height': '0px'
+        //};
+        //$scope.iconStyle = {
+        //    'width': $scope.pageHeight * 0.0425 + 'px !important',
+        //    'height': $scope.pageHeight * 0.0425 + 'px !important'
+        //};
+        //$scope.slotStyle = {
+        //    'width': $scope.pageHeight * 0.095 + 'px',
+        //    'height': $scope.pageHeight * 0.095 + 'px',
+        //    'border-radius': '0 0 0 0'
+        //};
+        //$scope.titleStyle = {
+        //    'height': $scope.pageHeight * 0.07 + 'px',
+        //};
+
         $scope.buttonStyle = {
-            'margin-left': $scope.pageWidth*0.004+'px', 
-            'margin-right': $scope.pageWidth*0.004+'px',
-            'width': $scope.pageHeight*0.085+'px', 
-            'height': $scope.pageHeight * 0.085 + 'px',
-            'line-height': '0px'
+            'margin-left': '0px', 
+            'margin-right': '0px',
+            'width': '0px',
+            'height': '0px',
+            'line-height': '0px',
+            'min-height': '0px'
         };
         $scope.iconStyle = {
-            'width': $scope.pageHeight * 0.0425 + 'px',
-            'height': $scope.pageHeight * 0.0425 + 'px'
+            'width': '0px',
+            'height': '0px'
+        };
+        $scope.slotStyle = {
+            'width': '0px',
+            'height': '0px',
+            'border-radius': '0 0 0 0'
+        };
+        $scope.titleStyle = {
+            'height': '0px',
         };
 
-        $scope.card_width = $("#card").width();
-        $scope.content_padding = parseInt($("#content").css("padding-right")) + parseInt($("#content").css("padding-left"));
-        $scope.img_width = parseInt(($scope.card_width - $scope.content_padding) / 7)
+
+
+        $scope.$watch(function () { return $window.innerWidth; },
+            function (value) {
+                console.log(value);
+
+                var padding_h = parseInt($("#content").css("padding-top")) + parseInt($("#content").css("padding-bottom"));
+                var img_height = parseInt(($window.innerHeight - padding_h) / 9);
+                var padding_w = parseInt($("#content").css("padding-right")) + parseInt($("#content").css("padding-left"));
+                var img_width = parseInt(($("#card").width() - padding_w) / 7);
+                var img_len = Math.min(img_height, img_width);
+                $scope.titleStyle['height'] = img_len * 1.0 + 'px';
+                $scope.slotStyle.width = img_len + 'px';
+                $scope.slotStyle.height = img_len + 'px';
+                $scope.buttonStyle['margin-left'] = img_len * 0.1 + 'px';
+                $scope.buttonStyle['margin-right'] = img_len * 0.1 + 'px';
+                $scope.buttonStyle['width'] = img_len * 0.8 + 'px';
+                $scope.buttonStyle['height'] = img_len * 0.8 + 'px';
+                $scope.iconStyle['width'] = img_len * 0.8 * 0.5 + 'px';
+                $scope.iconStyle['height'] = img_len * 0.8 * 0.5 + 'px';
+
+
+                
+          },
+          true
+        );
+
+        angular.element($window).bind('resize', function () {
+            $scope.$apply();
+        });
+
+
+
+
+
+
+
+
+
+
+
+        //$scope.card_height = $("#card").height();
+        //$scope.card_width = $("#card").width();
+
+        //$scope.buttonStyle = {
+        //    'margin-left': $scope.card_width * 0.004 + 'px',
+        //    'margin-right': $scope.card_width * 0.004 + 'px',
+        //    'width': $scope.card_width * 0.085 + 'px',
+        //    'height': $scope.card_width * 0.085 + 'px',
+        //    'line-height': '0px'
+        //};
+        //$scope.iconStyle = {
+        //    'width': $scope.card_width * 0.0425 + 'px',
+        //    'height': $scope.card_width * 0.0425 + 'px'
+        //};
+        
+        //$scope.content_padding = parseInt($("#content").css("padding-right")) + parseInt($("#content").css("padding-left"));
+        //$scope.img_width = parseInt(($scope.card_width - $scope.content_padding) / 7);
+
+        //$scope.slotStyle = {
+        //    //'width': $scope.card_width * 0.095 + 'px',
+        //    //'height': $scope.card_width * 0.095 + 'px',
+        //    'width': $scope.img_width + 'px',
+        //    'border-radius': '0 0 0 0'
+        //};
+
 
         $scope.columns = [];
         $scope.rows = [];
