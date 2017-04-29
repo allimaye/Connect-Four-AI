@@ -13,17 +13,29 @@ class Connect4(object):
 
     def minimax(self):
 
-        # edge case: can win in 1 turn. Use a copy of the root board for this so it doesn't
+        # edge case 1: CPU/maximizer/player 2 can win in 1 turn. Use a copy of the root board for this so it doesn't
         # interfere with alpha-beta pruning
         copy = deepcopy(self.root)
         copy.generate_child_boards()
         for board in copy.child_boards:
             if(board == None):
                 continue
-            board.evaluate_board()
             if(board.p2_streaks[2] > 0):
                 # (response board, if p2 has won)
                 return (board.board, True, board.winning_streak)
+
+        # edge case 2: Player 1 /human/mimimizer can win in 1 turn
+        copy = deepcopy(self.root)
+        copy.maximizer = False
+        copy.generate_child_boards()
+        for index, board in enumerate(copy.child_boards):
+            if (board == None):
+                continue
+            if (board.p1_streaks[2] > 0):
+                copy2 = deepcopy(self.root)
+                copy2.generate_next_child(index)
+                return (copy2.child_boards[0].board, False, None)
+
 
         # run minimax on the root board
         self.root.minimax(0, self.search_depth)
@@ -47,7 +59,7 @@ class Connect4(object):
         return (response_board, False, None)
 
     def check_for_p1_win(self):
-        self.root.evaluate_board()
+        # self.root.evaluate_board()
         if (self.root.p1_streaks[2] > 0):
             return (True, self.root.winning_streak)
         else:

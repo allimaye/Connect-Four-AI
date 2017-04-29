@@ -8,38 +8,43 @@ class Board(object):
         self.parent_board = parent_board
         self.board = board
         self.child_boards = []
-        # [2-streaks, 3-streaks, 4-streaks, nullifiers]
+        # [2-streaks, 3-streaks, 4-streaks]
         self.p1_streaks = [0, 0, 0]
-        self.p1_threats = 0
-        self.p1_nullifiers = 0
         self.p2_streaks = [0, 0, 0]
-        self.p2_threats = 0
-        self.p2_nullifiers = 0
         self.winning_streak = []
-        self.minimax_val = 0
-        self.maximizer = None
+        if(parent_board is None):
+            self.maximizer = None
+        else:
+            self.maximizer = not parent_board.maximizer
         self.alpha = alpha
         self.beta = beta
+        self.minimax_val = 0
+
+        # find all 4-streaks (possible game wins) for both players
+        self.find_streaks234(1, [4])
+        self.find_streaks234(2, [4])
+        pass
 
 
     def minimax(self, depth, search_depth):
 
         # ------ base case: leaf node -----------
-        if(depth == search_depth):
+        if(depth == search_depth or len(self.winning_streak) > 0):
             self.evaluate_board()
             return
 
         # -------- non leaf node -----------
 
         # assign a min value to the maximizer and a max value to the minimizer
-        if(self.maximizer):
-            self.minimax_val = 0
+        new_bound = 0
+        if (self.maximizer):
+            new_bound = sys.maxint * -10
         else:
-            self.minimax_val = sys.maxint * 10
+            new_bound = sys.maxint * 10
 
         for col in xrange(0, 7):
-            # generate the next child and pass on alpa and beta values.
-            # If a child cannot be created (since the corresponding column is full), move on to next child.
+            # generate the next child and pass on alpha and beta values.
+            # If a child cannot be created (column is full or end game board), move on to next child.
             board_created = self.generate_next_child(col)
             if(not board_created):
                 continue
@@ -51,18 +56,19 @@ class Board(object):
             if(self.maximizer):
                 if(curr_child.minimax_val > self.alpha):
                     self.alpha = curr_child.minimax_val
-                if(curr_child.minimax_val >= self.minimax_val):
-                    self.minimax_val = curr_child.minimax_val
+                if(curr_child.minimax_val > new_bound):
+                    new_bound = curr_child.minimax_val
             else:
                 if(curr_child.minimax_val < self.beta):
                     self.beta = curr_child.minimax_val
-                if (curr_child.minimax_val < self.minimax_val):
-                    self.minimax_val = curr_child.minimax_val
+                if (curr_child.minimax_val < new_bound):
+                    new_bound = curr_child.minimax_val
 
             # prune any nodes that don't need to be searched
-            if(self.alpha >= self.beta):
+            if(self.alpha > self.beta):
                 break
 
+        self.minimax_val = new_bound
         # If at this point all child boards are null boards, then we have reached a leaf node that is not
         # at the search depth. This would correspond to the last possible move. Since my search depth will never
         # be high enough to reach this point, exclude the code to improve performance.
@@ -71,6 +77,10 @@ class Board(object):
     def generate_child_boards(self):
         if(len(self.child_boards) == 7):
             return
+        # this is a game ending board. Children do not need to be considered.
+        if(len(self.winning_streak) > 0):
+            return
+
 
         for col in xrange(0, 7):
             for row in xrange(5, -1, -1):
@@ -86,27 +96,25 @@ class Board(object):
                         child_board[row][col] = 1
                         new_board = Board(self, child_board)
                         new_board.maximizer = True
-
                     self.child_boards.append(new_board)
                     break
 
     def generate_next_child(self, colNum):
-        # all childs have been generated (cannot generate another child)
+        # all children have been generated (cannot generate another child)
         if (len(self.child_boards) == 7):
+            return False
+        # this is a game ending board. Children do not need to be considered.
+        if(len(self.winning_streak) > 0):
             return False
 
         for row in xrange(5, -1, -1):
             if (self.board[row][colNum] == 0):
-                child_board = deepcopy(self.board)
-                new_board = Board(self, child_board, self.alpha, self.beta)
+                new_board = Board(self, deepcopy(self.board), self.alpha, self.beta)
                 # the current board belongs to player 1, so player 2 (CPU) will make the next move
                 if (self.maximizer):
-                    child_board[row][colNum] = 2
-                    new_board.maximizer = False
+                    new_board.board[row][colNum] = 2
                 else:
-                    child_board[row][colNum] = 1
-                    new_board.maximizer = True
-
+                    new_board.board[row][colNum] = 1
                 self.child_boards.append(new_board)
                 return True
 
@@ -118,30 +126,33 @@ class Board(object):
 
     def evaluate_board(self):
 
-        # find all 2-,3-, and 4-streaks for both players
-        self.find_streaks234(1)
-        self.find_streaks234(2)
-
         # Take weighted average using each of the heuristics.
         # Priority from highest to lowest:
         # 1. Prevent a losing board. If any board has a 4-streak for p1, then it gets -inf value
-        # 2. Get as many 234 streaks as possible. The value of 2-streaks < 3-streaks << 4-streaks
-
-        self.minimax_val = 2*self.p2_streaks[0] + 4*self.p2_streaks[1] + 100*self.p2_streaks[2]
-        if(self.p1_streaks[2] > 0):
+        # 2. Get as many 234 streaks as possible. The value of 2-streaks < 3-streaks
+        if (self.p1_streaks[2] > 0):
             self.minimax_val = -1 * sys.maxint
+        elif (self.p2_streaks[2] > 0):
+            self.minimax_val = 1 * sys.maxint
+        else:
+            # find all 2-streaks and 3-streaks for both players
+            self.find_streaks234(1, [2, 3])
+            self.find_streaks234(2, [2, 3])
+            self.minimax_val = 2*self.p2_streaks[0] + 5*self.p2_streaks[1] - 2 * self.p1_streaks[0] - 5 * self.p1_streaks[1]
 
 
-    def find_streaks234(self, player):
+
+
+    def find_streaks234(self, player, streak_lengths):
 
         # define 4 directions to search for N-streaks. Since we iterate by row and then by column,
         # other directions (N, NW, W, NE) don't need to be searched because we have already looked at those
         # elements in previous iterations.
 
         # format: [row, col]
-        dirs = [[0, 1], [1, 0], [1, 1], [1, -1], ]  # E, S, SE, SW
+        dirs = [[0, 1], [1, 0], [1, 1], [1, -1]]  # E, S, SE, SW
 
-        for streak_length in xrange(2, 5):
+        for streak_length in streak_lengths:
             # traverse straight in all 4 directions from each point and
             # find any streaks that the current element is a part of
             for row in xrange(0, 6):
